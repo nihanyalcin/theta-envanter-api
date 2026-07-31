@@ -11,10 +11,12 @@ Neden Playwright?
   çiziliyor. WeasyPrint gibi araçlar JS çalıştırmadığı için
   grafik boş çıkar. Playwright gerçek bir Chromium açıyor.
 
-Dosya yapısı:
+Dosya yapısı (ikisi de çalışır):
   app.py
   requirements.txt
-  templates/yasam-dengesi.html   ← rapor şablonu buraya
+  yasam-dengesi.html             ← düz yapı
+    veya
+  templates/yasam-dengesi.html   ← klasörlü yapı
 ==========================================================
 """
 
@@ -26,7 +28,7 @@ from playwright.sync_api import sync_playwright
 
 app = Flask(__name__)
 
-SABLON_KLASORU = os.path.join(os.path.dirname(__file__), "templates")
+KOK = os.path.dirname(os.path.abspath(__file__))
 RAPOR_ANAHTARI = os.environ.get("RAPOR_ANAHTARI")  # boşsa yetki kontrolü yapılmaz
 
 # Şablonları bir kez okuyup bellekte tut
@@ -34,10 +36,22 @@ _sablonlar = {}
 
 
 def sablon_al(ad):
+    """Şablonu önce kök klasörde, bulamazsa templates/ içinde arar.
+       Böylece dosyaları nasıl yüklediğinden bağımsız çalışır."""
     if ad not in _sablonlar:
-        yol = os.path.join(SABLON_KLASORU, f"{ad}.html")
-        with open(yol, "r", encoding="utf-8") as f:
-            _sablonlar[ad] = f.read()
+        adaylar = [
+            os.path.join(KOK, f"{ad}.html"),
+            os.path.join(KOK, "templates", f"{ad}.html"),
+        ]
+        for yol in adaylar:
+            if os.path.exists(yol):
+                with open(yol, "r", encoding="utf-8") as f:
+                    _sablonlar[ad] = f.read()
+                break
+        else:
+            raise FileNotFoundError(
+                f"{ad}.html bulunamadı. Aranan yerler: " + " · ".join(adaylar)
+            )
     return _sablonlar[ad]
 
 
