@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Yaşam Dengesi Haritası — Rapor</title>
+<link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Jost:wght@200;300;400;500&family=Cormorant+Garamond:ital,wght@0,300;1,300&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --krem:#FAF7F2; --krem-2:#F4EFE7; --beyaz:#FFFFFF;
+  --lila-sis:#F2EEF7; --lila-hafif:#F8F6FB; --lila:#C6B5DC; --lila-koyu:#8E6FB3;
+  --mor:#3E2757; --mor-orta:#6A4A8C;
+  --altin:#C4A253; --altin-acik:#DCC489; --altin-sis:#F7F0E2;
+  --kul:#7C6F88; --cizgi:rgba(62,39,87,.10);
+  --baslik:'Marcellus',Georgia,serif;
+  --metin:'Jost',system-ui,sans-serif;
+  --italik:'Cormorant Garamond',Georgia,serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{background:#E9E4EE;font-family:var(--metin);font-weight:300;color:var(--mor);
+  line-height:1.6;-webkit-font-smoothing:antialiased;padding:30px 16px}
+
+/* A4 sayfa */
+.sayfa{width:210mm;min-height:297mm;background:var(--krem);margin:0 auto 24px;
+  padding:24mm 20mm;position:relative;box-shadow:0 6px 30px rgba(62,39,87,.13);
+  overflow:hidden}
+
+h1{font-family:var(--baslik);font-weight:400;font-size:38px;line-height:1.2}
+h2{font-family:var(--baslik);font-weight:400;font-size:25px;line-height:1.3;margin-bottom:6px}
+h3{font-family:var(--baslik);font-weight:400;font-size:18px;line-height:1.35}
+p{font-size:14.5px;line-height:1.85;color:var(--kul)}
+.etiket{font-size:9.5px;letter-spacing:.34em;text-transform:uppercase;color:var(--altin)}
+.bolum-bas{margin-bottom:26px;padding-bottom:14px;border-bottom:1px solid var(--cizgi)}
+.bolum-bas .etiket{display:block;margin-bottom:9px}
+.bolum-bas p{font-size:13.5px;margin-top:6px}
+
+/* ---------- KAPAK ---------- */
+.kapak{display:flex;flex-direction:column;justify-content:center;text-align:center}
+.kapak .kemer{position:absolute;top:38mm;left:50%;transform:translateX(-50%);
+  width:118mm;height:150mm;border-radius:59mm 59mm 0 0;
+  background:linear-gradient(180deg,var(--lila-sis) 0%,rgba(242,238,247,0) 76%);z-index:0}
+.kapak .kemer::after{content:'';position:absolute;inset:0;border-radius:59mm 59mm 0 0;
+  border:1px solid rgba(196,162,83,.34);border-bottom:none}
+.kapak-ic{position:relative;z-index:1}
+.kapak .marka{font-family:var(--baslik);font-size:15px;letter-spacing:.14em;
+  color:var(--mor);margin-bottom:46px}
+.kapak .marka b{font-weight:400;color:var(--altin)}
+.kapak h1{margin-bottom:14px}
+.kapak .alt{font-family:var(--italik);font-style:italic;font-size:19px;color:var(--lila-koyu);margin-bottom:52px}
+.kapak .kisi{font-family:var(--baslik);font-size:22px;color:var(--mor);margin-bottom:6px}
+.kapak .tarih{font-size:13px;color:var(--kul);margin-bottom:44px}
+.genel-skor{display:inline-block;border:1px solid rgba(196,162,83,.45);
+  border-radius:14px;padding:24px 42px;background:rgba(255,255,255,.6)}
+.genel-skor .no{font-family:var(--baslik);font-size:48px;color:var(--altin);line-height:1}
+.genel-skor .ad{font-size:10.5px;letter-spacing:.24em;text-transform:uppercase;
+  color:var(--kul);margin-top:8px}
+.genel-skor .yorum{font-size:13px;color:var(--mor-orta);margin-top:12px;max-width:210px}
+
+/* ---------- RADAR ---------- */
+.radar-kap{display:flex;justify-content:center;margin:8px 0 22px}
+.radar text{font-family:var(--metin);font-size:8.5px;fill:var(--mor);font-weight:300}
+.radar .agh{stroke:var(--cizgi);fill:none;stroke-width:.6}
+.radar .eksen{stroke:var(--cizgi);stroke-width:.6}
+.radar .alan{fill:rgba(198,181,220,.42);stroke:var(--lila-koyu);stroke-width:1.6}
+.radar .nokta{fill:var(--altin)}
+.radar .yuzde{font-size:7.5px;fill:var(--kul)}
+
+/* ---------- KARŞILAŞTIRMA ---------- */
+.kars{margin-top:6px}
+.kars-satir{margin-bottom:17px}
+.kars-ust{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+.kars-ad{font-family:var(--baslik);font-size:14px;color:var(--mor)}
+.kars-fark{font-size:11px;color:var(--kul)}
+.kars-fark b{font-weight:400;color:var(--altin)}
+.cubuk{height:9px;border-radius:9px;background:var(--krem-2);position:relative;margin-bottom:4px}
+.cubuk i{position:absolute;left:0;top:0;bottom:0;border-radius:9px;display:block}
+.cubuk.mem i{background:linear-gradient(90deg,var(--lila),var(--lila-koyu))}
+.cubuk.one i{background:var(--altin-acik)}
+.cubuk-etiket{font-size:9.5px;color:var(--kul);display:flex;justify-content:space-between;margin-bottom:3px}
+
+.aciklayici{display:flex;gap:22px;justify-content:center;margin-top:20px;
+  padding-top:16px;border-top:1px solid var(--cizgi)}
+.aciklayici span{font-size:11px;color:var(--kul);display:flex;align-items:center;gap:7px}
+.aciklayici i{width:16px;height:8px;border-radius:8px;display:block}
+
+/* ---------- ÖNCELİK ---------- */
+.oncelik{background:var(--beyaz);border:1px solid rgba(196,162,83,.4);
+  border-radius:14px;padding:24px 26px;margin-bottom:14px}
+.oncelik .sira{font-family:var(--baslik);font-size:12px;letter-spacing:.2em;
+  color:var(--altin);margin-bottom:8px}
+.oncelik h3{margin-bottom:9px}
+.oncelik p{font-size:14px;margin:0}
+.oncelik .rakamlar{display:flex;gap:26px;margin-top:14px;padding-top:14px;
+  border-top:1px solid var(--cizgi)}
+.oncelik .rakamlar div{font-size:11px;color:var(--kul)}
+.oncelik .rakamlar b{font-family:var(--baslik);font-size:17px;color:var(--mor);
+  display:block;font-weight:400;margin-top:2px}
+
+/* ---------- ALAN YORUMLARI ---------- */
+.alan{background:var(--beyaz);border:1px solid var(--cizgi);border-radius:12px;
+  padding:20px 24px;margin-bottom:12px;break-inside:avoid}
+.alan-ust{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:10px}
+.alan-ad{font-family:var(--baslik);font-size:16px;color:var(--mor)}
+.alan-skor{font-family:var(--baslik);font-size:20px;color:var(--altin);white-space:nowrap}
+.alan p{font-size:13.5px;line-height:1.8;margin:0}
+.mini-cubuk{height:5px;border-radius:5px;background:var(--krem-2);margin:0 0 12px;overflow:hidden}
+.mini-cubuk i{display:block;height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--lila),var(--lila-koyu))}
+
+/* ---------- GÜÇLÜ ZEMİN ---------- */
+.zemin{background:var(--lila-sis);border-radius:14px;padding:26px 28px;margin-bottom:22px}
+.zemin h3{margin-bottom:10px}
+.zemin p{font-size:14px}
+.zemin .liste{display:flex;gap:12px;margin-top:16px;flex-wrap:wrap}
+.zemin .liste span{background:var(--beyaz);border-radius:40px;padding:8px 18px;
+  font-size:13px;color:var(--mor)}
+.zemin .liste b{font-family:var(--baslik);font-weight:400;color:var(--altin)}
+
+/* ---------- SORULAR ---------- */
+.soru{border-left:2px solid var(--altin);padding:4px 0 4px 20px;margin-bottom:20px}
+.soru p{font-family:var(--italik);font-style:italic;font-size:17px;
+  line-height:1.6;color:var(--mor);margin:0}
+
+/* ---------- SENİN SÖZLERİN ---------- */
+.senin{background:var(--altin-sis);border-radius:12px;padding:20px 24px;margin-bottom:12px}
+.senin .s{font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--altin);margin-bottom:7px}
+.senin p{font-size:14px;color:var(--mor-orta);margin:0;line-height:1.8}
+
+/* ---------- KAPANIŞ ---------- */
+.kapanis{background:var(--mor);border-radius:16px;padding:36px 34px;text-align:center;
+  color:var(--krem);position:relative;overflow:hidden;margin-top:24px}
+.kapanis::before{content:'';position:absolute;top:-40mm;left:50%;transform:translateX(-50%);
+  width:90mm;height:90mm;border-radius:45mm 45mm 0 0;
+  border:1px solid rgba(196,162,83,.24);border-bottom:none}
+.kapanis-ic{position:relative;z-index:1}
+.kapanis .etiket{color:var(--altin-acik);display:block;margin-bottom:14px}
+.kapanis h2{color:var(--krem);margin-bottom:12px}
+.kapanis p{color:rgba(250,247,242,.72);font-size:14px;max-width:330px;margin:0 auto 22px}
+.kapanis .btn{display:inline-block;background:var(--altin);color:#fff;
+  padding:13px 30px;border-radius:40px;font-size:14px;text-decoration:none}
+.kapanis .site{font-size:12px;color:rgba(250,247,242,.45);margin-top:20px}
+
+/* ---------- ALT BİLGİ ---------- */
+.alt-bilgi{position:absolute;bottom:12mm;left:20mm;right:20mm;
+  display:flex;justify-content:space-between;font-size:9.5px;color:var(--kul);
+  padding-top:8px;border-top:1px solid var(--cizgi)}
+.alt-bilgi b{font-family:var(--baslik);font-weight:400;color:var(--mor)}
+
+.uyari{font-size:11.5px;line-height:1.75;color:var(--kul);
+  background:var(--krem-2);border-radius:10px;padding:16px 20px;margin-top:20px}
+
+@media print{
+  body{background:#fff;padding:0}
+  .sayfa{box-shadow:none;margin:0;page-break-after:always}
+  .sayfa:last-child{page-break-after:auto}
+}
+</style>
+</head>
+<body>
+
+<!-- ==========================================================
+     VERİ BLOĞU
+     ----------------------------------------------------------
+     Otomasyon bu bloğu değiştirir, rapor kendini yeniden çizer.
+     Render/Puppeteer ile PDF alınabilir.
+     ========================================================== -->
+<script>
+/* ==========================================================
+   VERİ BLOĞU
+   ----------------------------------------------------------
+   Otomasyon SADECE {{VERI_JSON}} ifadesini değiştirir.
+   Yerine şu yapıda bir JSON koyar:
+   {"ad":"...","tarih":"...","alanlar":[{"ad":"...","mem":00,"one":00}, ...],
+    "acik":{"durduran":"...","degisim":"...","engel":"..."}}
+   ========================================================== -->
+const VERI = {{VERI_JSON}};
+</script>
+
+
+<!-- ================= SAYFA 1 · KAPAK ================= -->
+<section class="sayfa kapak">
+  <div class="kemer"></div>
+  <div class="kapak-ic">
+    <div class="marka">THETA <b>KAPISI</b></div>
+    <h1>Yaşam Dengesi<br>Haritası</h1>
+    <p class="alt">Sekiz alanda nerede duruyorsun?</p>
+    <div class="kisi" id="kKisi"></div>
+    <div class="tarih" id="kTarih"></div>
+    <div class="genel-skor">
+      <div class="no" id="kSkor"></div>
+      <div class="ad">Genel denge</div>
+      <div class="yorum" id="kYorum"></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ================= SAYFA 2 · ÇARK ================= -->
+<section class="sayfa">
+  <div class="bolum-bas">
+    <span class="etiket">Bir bakışta</span>
+    <h2>Denge çarkın</h2>
+    <p>Dıştaki halka %100, merkez %0. Şekil ne kadar düzgünse hayatın o kadar dengeli dağılmış demektir.</p>
+  </div>
+
+  <div class="radar-kap"><svg class="radar" id="radar" width="440" height="440" viewBox="0 0 440 440"></svg></div>
+
+  <div class="uyari" id="tutarlilik"></div>
+
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+
+<!-- ================= SAYFA 3 · ÖNEM–MEMNUNİYET ================= -->
+<section class="sayfa">
+  <div class="bolum-bas">
+    <span class="etiket">Raporun kalbi</span>
+    <h2>Önem ve memnuniyet</h2>
+    <p>Bir alanda düşük puan almak tek başına sorun değildir — o alan senin için önemliyse sorundur. Aşağıda iki çubuk yan yana: ne kadar önemsediğin ve şu an nerede olduğun.</p>
+  </div>
+
+  <div class="kars" id="kars"></div>
+
+  <div class="aciklayici">
+    <span><i style="background:linear-gradient(90deg,#C6B5DC,#8E6FB3)"></i> Memnuniyet</span>
+    <span><i style="background:#DCC489"></i> Önem</span>
+  </div>
+
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+
+<!-- ================= SAYFA 4 · ÖNCELİKLER ================= -->
+<section class="sayfa">
+  <div class="bolum-bas">
+    <span class="etiket">Nereden başlamalı</span>
+    <h2>Öncelik alanların</h2>
+    <p>Önem ile memnuniyet arasındaki açığın en büyük olduğu üç alan. Koçlukta konuşulacak yer burasıdır.</p>
+  </div>
+
+  <div id="oncelikler"></div>
+  <div id="zemin"></div>
+
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+
+<!-- ================= SAYFA 5–6 · ALAN YORUMLARI ================= -->
+<section class="sayfa">
+  <div class="bolum-bas">
+    <span class="etiket">Alan alan</span>
+    <h2>Sekiz alan, sekiz yorum</h2>
+    <p>Her alandaki durumun ve üzerine düşünebileceğin bir açı.</p>
+  </div>
+  <div id="alanlar1"></div>
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+<section class="sayfa">
+  <div id="alanlar2" style="margin-top:4px"></div>
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+
+<!-- ================= SAYFA 7 · SORULAR + KAPANIŞ ================= -->
+<section class="sayfa">
+  <div class="bolum-bas">
+    <span class="etiket">Kendine sor</span>
+    <h2>Bu haftanın soruları</h2>
+    <p>Cevaplamak zorunda değilsin. Sadece taşı.</p>
+  </div>
+
+  <div id="sorular"></div>
+  <div id="seninSozlerin"></div>
+
+  <div class="uyari">
+    Bu envanter bir teşhis aracı değildir; psikolojik ya da tıbbi bir değerlendirme yerine geçmez.
+    Süregelen bir yorgunluk, uyku sorunu ya da ağrı yaşıyorsan önce bir hekime görünmen gerekir.
+  </div>
+
+  <div class="kapanis">
+    <div class="kapanis-ic">
+      <span class="etiket">Devamı için</span>
+      <h2>Haritan çıktı. Şimdi ne olacak?</h2>
+      <p>Bu rapor nerede olduğunu gösterir. Nereye gideceğini birlikte çalışabiliriz. Tanışma görüşmesi ücretsiz — yaklaşık yirmi dakika, hiçbir bağlayıcılığı yok.</p>
+      <a href="https://thetakapisi.com.tr/danismanlik" class="btn">Danışmanlık hizmetleri</a>
+      <div class="site">thetakapisi.com.tr</div>
+    </div>
+  </div>
+
+  <div class="alt-bilgi"><span>Yaşam Dengesi Haritası</span><span><b>Theta Kapısı</b></span></div>
+</section>
+
+
+<script>
+/* ==========================================================
+   YORUM METİNLERİ
+   ========================================================== */
+const YORUM = {
+"İş ve Kariyer":{
+ y:"İşinle kurduğun ilişki sağlam. Ne yaptığını ve neden yaptığını biliyorsun. Bu, çoğu insanın sahip olmadığı bir zemin; onu koru.",
+ o:"İşinle aran fena değil ama bir şey tam oturmuyor. Belki yön belirsiz, belki yaptığın iş sana benzemiyor. Bu alanda \"sorun ne\" sorusundan önce \"aslında ne isterdim\" sorusu daha çok işe yarar.",
+ d:"İş hayatın şu an seni besliyor değil, tüketiyor. Ama dikkat: bu her zaman işi değiştirmen gerektiği anlamına gelmez. Bazen sorun işin kendisi değil, sınır, değer çatışması ya da tükenmişliktir. Doğru teşhis olmadan yapılan değişim, aynı sorunu yeni bir binaya taşır."},
+"Para ve Maddi Güven":{
+ y:"Parayla ilişkin sakin. Bu sadece rakamla ilgili değil; kontrol hissiyle ilgili. Bu his, diğer alanlarda risk almanı da kolaylaştırır.",
+ o:"İdare ediyorsun ama arka planda hafif bir tedirginlik var. Bu tedirginlik genelde bütçeden çok belirsizlikten gelir. Nereye gittiğini bilmek, ne kadar olduğunu bilmekten daha çok rahatlatır.",
+ d:"Para şu an zihninin önemli bir kısmını meşgul ediyor. Bu yorucu ve başka alanlara da sızıyor olabilir. Şunu ayırmak faydalı: gerçek bir maddi darlık mı yaşıyorsun, yoksa yeterli olduğu halde hiç güvende hissetmiyor musun? İkisi çok farklı çalışmalar gerektirir."},
+"Sağlık ve Beden":{
+ y:"Bedeninle iyi bir ilişkin var. Onu duyuyor, ihtiyaçlarını karşılıyorsun. Bu, uzun vadede her şeyi taşıyan zemindir.",
+ o:"Bedenine tamamen sırt çevirmiş değilsin ama önceliğin de değil. Genelde bu, \"önce şu işi bitireyim sonra kendime bakarım\" cümlesiyle yaşar. O sıra pek gelmez.",
+ d:"Beden sinyal veriyor ama sen duymuyor ya da erteliyorsun. Bu envanter bir sağlık değerlendirmesi değil — süregelen bir yorgunluk, ağrı ya da uyku sorunu varsa önce bir hekime görünmen gerekir. Koçluk onun yerine geçmez, yanında durur."},
+"Aile ve Yakın Çevre":{
+ y:"Arkanda bir ağ var ve bunu hissediyorsun. Bu, zorlukları taşıma kapasiteni doğrudan artırır.",
+ o:"İnsanlar var ama ilişkiler tam beslemiyor olabilir. Bazen sorun yakınlığın azlığı değil, yanlış kişilerle çok yakın olmaktır.",
+ d:"Şu an kendini yalnız hissediyorsun ya da yakın çevren seni yoruyor. İkisi de ağır. Şunu sormak faydalı olabilir: gerçekten kimsem yok mu, yoksa var ama uzanamıyor muyum?"},
+"Aşk ve Yakınlık":{
+ y:"Duygusal yakınlık ihtiyacın karşılanıyor. Kalbini açabildiğin bir yer var ve bu görünenden daha değerli.",
+ o:"Bu alanda bir eksiklik hissi var ama net değil. Belki bir ilişki içindesin ama derinleşmiyor; belki tek başınasın ve bunu bazen taşıyabiliyor bazen taşıyamıyorsun.",
+ d:"Yakınlık ihtiyacın şu an karşılanmıyor. Bu bir eksiklik değil, bir ihtiyaç — ve ihtiyacın olması normal. Bu alan koçlukta çalışılırken genelde \"birini bulmak\" değil, \"yakınlığa neyin engel olduğu\" konuşulur."},
+"Kişisel Gelişim ve Anlam":{
+ y:"Büyüyor ve bunu biliyorsun. Hayatının bir yönü var. Bu alan güçlüyken diğer alanlardaki zorluklar daha taşınabilir olur.",
+ o:"İlgin var ama süreklilik yok. Ya da öğreniyorsun fakat öğrendiğin hayatına dokunmuyor. Bilgiyle pratik arasındaki mesafe burada asıl konu.",
+ d:"Şu an gelişim ve anlam radarında değil. Bu bazen tükenmişliğin bir işaretidir — insan hayatta kalmaya odaklandığında büyümeye yer kalmaz. Kendini bu alan için zorlamak yerine, neden yer olmadığına bakmak daha verimli olabilir."},
+"Dinlenme ve Keyif":{
+ y:"Kendine zaman ayırabiliyor ve bunu suçluluk duymadan yapabiliyorsun. Bu ikincisi çok daha nadir bir beceridir.",
+ o:"Dinleniyorsun ama tam dinlenemiyorsun. Genelde vakit sorunu değil izin sorunudur: mola veriyorsun ama zihnin arka planda çalışmaya devam ediyor.",
+ d:"Kendine ayırdığın zaman neredeyse yok ya da olduğunda kendini kötü hissediyorsun. Bu alanı ihmal etmek kısa vadede verimli görünür, uzun vadede diğer bütün alanları aşağı çeker."},
+"Yaşam Alanı ve Düzen":{
+ y:"Çevren seni taşıyor. Bu, gün içinde farkında olmadan enerji kazandığın bir kaynak.",
+ o:"Yaşadığın yer ve düzenin ne çok iyi ne çok kötü. Bu alan sıklıkla küçümsenir ama düzelmesi en hızlı ve en somut sonuç veren alandır.",
+ d:"Fiziksel çevren şu an sana yük oluyor. Bunun zihinsel maliyeti sanılandan yüksektir. İyi haber: bu alan çoğu zaman en kolay değişendir ve ilk somut kazanımı buradan almak diğer alanlara güven verir."}
+};
+
+const SORU = {
+"İş ve Kariyer":"İşimde beni tüketen şey görevlerin kendisi mi, yoksa orada olma biçimim mi?",
+"Para ve Maddi Güven":"Kendimi güvende hissetmem için gerçekten ne kadar gerekiyor — ve bunu hiç hesapladım mı?",
+"Sağlık ve Beden":"Bedenim bana aylardır ne söylüyor da ben duymazdan geliyorum?",
+"Aile ve Yakın Çevre":"Zor bir günümde kimi arıyorum? Peki neden onu arıyorum?",
+"Aşk ve Yakınlık":"Yakınlığa izin vermek benim için neden zor — yoksa değil mi?",
+"Kişisel Gelişim ve Anlam":"Son bir yılda öğrendiğim şeylerden hangisi hayatıma gerçekten dokundu?",
+"Dinlenme ve Keyif":"Durursam ne olacağını düşünüyorum? Bu gerçekten olur mu?",
+"Yaşam Alanı ve Düzen":"Evimde beni en çok yoran tek şey ne — ve onu değiştirmek bu hafta mümkün mü?"
+};
+
+/* ==========================================================
+   HESAP VE ÇİZİM
+   ========================================================== */
+const A = VERI.alanlar.map(a => ({...a, fark: a.one - a.mem}));
+const ort = Math.round(A.reduce((t,a)=>t+a.mem,0)/A.length);
+const enY = Math.max(...A.map(a=>a.mem));
+const enD = Math.min(...A.map(a=>a.mem));
+const yayilim = enY - enD;
+const band = m => m>=70 ? 'y' : (m>=40 ? 'o' : 'd');
+
+/* --- Kapak --- */
+document.getElementById('kKisi').textContent  = VERI.ad;
+document.getElementById('kTarih').textContent = VERI.tarih;
+document.getElementById('kSkor').textContent  = '%' + ort;
+document.getElementById('kYorum').textContent =
+  ort>=70 ? 'Sağlam bir zemin üstündesin.' :
+  ort>=50 ? 'Bazı alanlar taşıyor, bazıları yoruyor.' :
+  ort>=30 ? 'Şu an epey yük taşıyorsun.' :
+            'Bu dönem zorlu geçiyor. Yalnız değilsin.';
+
+/* --- Radar --- */
+(function(){
+  const s=document.getElementById('radar'), M=220, R=150, n=A.length;
+  const nk=(i,r)=>{const a=(Math.PI*2*i/n)-Math.PI/2;
+    return [M+Math.cos(a)*r, M+Math.sin(a)*r];};
+  let h='';
+  [.25,.5,.75,1].forEach(k=>{
+    let p=''; for(let i=0;i<n;i++){const [x,y]=nk(i,R*k); p+=(i?'L':'M')+x+','+y;}
+    h+=`<path class="agh" d="${p}Z"/>`;
+  });
+  for(let i=0;i<n;i++){const [x,y]=nk(i,R);
+    h+=`<line class="eksen" x1="${M}" y1="${M}" x2="${x}" y2="${y}"/>`;}
+  let p='';
+  A.forEach((a,i)=>{const [x,y]=nk(i,R*a.mem/100); p+=(i?'L':'M')+x+','+y;});
+  h+=`<path class="alan" d="${p}Z"/>`;
+  A.forEach((a,i)=>{const [x,y]=nk(i,R*a.mem/100);
+    h+=`<circle class="nokta" cx="${x}" cy="${y}" r="3.4"/>`;});
+  A.forEach((a,i)=>{
+    const [x,y]=nk(i,R+34);
+    const anc = Math.abs(x-M)<12 ? 'middle' : (x>M?'start':'end');
+    const kel=a.ad.split(' ');
+    let satir=[], gec='';
+    kel.forEach(k=>{ if((gec+' '+k).trim().length>13){satir.push(gec.trim());gec=k;} else gec+=' '+k; });
+    satir.push(gec.trim());
+    satir.forEach((t,j)=>{
+      h+=`<text x="${x}" y="${y+j*11-(satir.length-1)*5}" text-anchor="${anc}">${t}</text>`;});
+    h+=`<text class="yuzde" x="${x}" y="${y+satir.length*11-(satir.length-1)*5}" text-anchor="${anc}">%${a.mem}</text>`;
+  });
+  s.innerHTML=h;
+})();
+
+document.getElementById('tutarlilik').textContent = yayilim>40
+ ? `En güçlü alanınla en zorlandığın alan arasında ${yayilim} puan var. Bu, hayatının belirli alanlar üzerinde durduğunu gösteriyor — güçlü olanlar zayıf olanları da taşıyor. Bu sürdürülebilir değil; taşıyan alanlar yorulduğunda tablo hızlı değişir.`
+ : `Alanlar arasındaki fark ${yayilim} puan. Hayatın belirli alanlara aşırı yüklenmemiş; bu, dalgalanmalara karşı dayanıklılık sağlar.`;
+
+/* --- Önem–memnuniyet --- */
+document.getElementById('kars').innerHTML = A.map(a=>`
+  <div class="kars-satir">
+    <div class="kars-ust">
+      <span class="kars-ad">${a.ad}</span>
+      <span class="kars-fark">${a.fark>0?`açık <b>${a.fark}</b> puan`:'dengede'}</span>
+    </div>
+    <div class="cubuk-etiket"><span>Memnuniyet</span><span>%${a.mem}</span></div>
+    <div class="cubuk mem"><i style="width:${a.mem}%"></i></div>
+    <div class="cubuk-etiket"><span>Önem</span><span>%${a.one}</span></div>
+    <div class="cubuk one"><i style="width:${a.one}%"></i></div>
+  </div>`).join('');
+
+/* --- Öncelikler --- */
+const sirali=[...A].sort((x,y)=>y.fark-x.fark);
+const ilk3=sirali.filter(a=>a.fark>0).slice(0,3);
+document.getElementById('oncelikler').innerHTML = ilk3.length ? ilk3.map((a,i)=>{
+  const metin = a.fark>=40
+   ? `Bu alan senin için çok önemli ama şu an memnuniyetin düşük. Aradaki fark ${a.fark} puan. Koçluk sürecine buradan başlamak en hızlı rahatlamayı sağlar.`
+   : `Önemsediğin kadar iyi gitmiyor ama kriz düzeyinde de değil. Küçük bir düzenleme burada gözle görülür fark yaratabilir.`;
+  return `<div class="oncelik">
+    <div class="sira">${['BİRİNCİ','İKİNCİ','ÜÇÜNCÜ'][i]} ÖNCELİK</div>
+    <h3>${a.ad}</h3><p>${metin}</p>
+    <div class="rakamlar">
+      <div>Memnuniyet<b>%${a.mem}</b></div>
+      <div>Önem<b>%${a.one}</b></div>
+      <div>Açık<b>${a.fark} puan</b></div>
+    </div></div>`;}).join('')
+ : `<div class="oncelik"><div class="sira">DENGEDE</div>
+    <h3>Belirgin bir kriz alanı yok</h3>
+    <p>Önem verdiğin alanlarla memnuniyetin büyük ölçüde örtüşüyor. Bu, üzerine inşa edilebilecek sağlam bir zemin. Koçluk burada "sorun çözmek" için değil, bir üst seviyeye taşımak için kullanılır.</p></div>`;
+
+/* --- Güçlü zemin --- */
+const guclu=[...A].sort((x,y)=>y.mem-x.mem).slice(0,2);
+document.getElementById('zemin').innerHTML = `<div class="zemin">
+  <h3>Güçlü zeminin</h3>
+  <p>Zorlandığın alanlarda enerji ararken buraya bakabilirsin. Bu iki alan şu an seni taşıyor — ve taşıdıklarının farkında olmak, onları korumanı sağlar.</p>
+  <div class="liste">${guclu.map(a=>`<span>${a.ad} <b>%${a.mem}</b></span>`).join('')}</div></div>`;
+
+/* --- Alan yorumları --- */
+const kart = a => `<div class="alan">
+  <div class="alan-ust"><span class="alan-ad">${a.ad}</span><span class="alan-skor">%${a.mem}</span></div>
+  <div class="mini-cubuk"><i style="width:${a.mem}%"></i></div>
+  <p>${YORUM[a.ad][band(a.mem)]}</p></div>`;
+document.getElementById('alanlar1').innerHTML = A.slice(0,4).map(kart).join('');
+document.getElementById('alanlar2').innerHTML = A.slice(4).map(kart).join('');
+
+/* --- Sorular --- */
+document.getElementById('sorular').innerHTML =
+  (ilk3.length?ilk3:sirali.slice(0,3)).map(a=>
+    `<div class="soru"><p>${SORU[a.ad]}</p></div>`).join('');
+
+/* --- Senin sözlerin --- */
+const ac=VERI.acik||{};
+if(ac.durduran||ac.degisim||ac.engel){
+  const p=[];
+  if(ac.durduran) p.push(['Seni en çok durduran alan', ac.durduran]);
+  if(ac.degisim)  p.push(['Üç ayda değiştirmek istediğin', ac.degisim]);
+  if(ac.engel)    p.push(['Önündeki engel', ac.engel]);
+  document.getElementById('seninSozlerin').innerHTML =
+   `<div class="bolum-bas" style="margin-top:32px"><span class="etiket">Kendi sözlerin</span>
+    <h2>Bunları sen yazdın</h2>
+    <p>İlk görüşmemizde buradan başlayacağız.</p></div>` +
+   p.map(([s,m])=>`<div class="senin"><div class="s">${s}</div><p>${m}</p></div>`).join('');
+}
+</script>
+</body>
+</html>
