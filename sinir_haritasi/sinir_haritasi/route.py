@@ -74,8 +74,8 @@ def mail_gonder(kime, konu, metin, ekler=(), bcc=None):
     for yol, ad in ekler:
         with open(yol, "rb") as f:
             msg.add_attachment(f.read(), maintype="application", subtype="pdf", filename=ad)
-    with smtplib.SMTP_SSL(host, port, timeout=30) as s:
-        s.login(user, pw)
+    with (smtplib.SMTP_SSL(host, port, timeout=30) if port == 465 else smtplib.SMTP(host, port, timeout=30)) as s:
+        (port == 465 or s.starttls()); s.login(user, pw)
         s.send_message(msg)
 
 
