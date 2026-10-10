@@ -2,7 +2,8 @@
 """Flask blueprint: POST /sinir-haritasi (Tally webhook).
 
 Ortam değişkenleri:
-  SMTP_HOST, SMTP_PORT (465), SMTP_USER (nihan@thetakapisi.com.tr), SMTP_PASS
+  BREVO_API_KEY (tercih edilen; HTTP ile gönderim) veya
+  SMTP_HOST, SMTP_PORT (465 SSL / 587 STARTTLS), SMTP_USER (nihan@thetakapisi.com.tr), SMTP_PASS
   NIHAN_EMAIL   (varsayılan nihan@thetakapisi.com.tr)
   URUN_KODU     (erişim kartındaki kod; birden fazlaysa virgülle)
   WHATSAPP_LINK (örn. https://wa.me/90XXXXXXXXXX?text=...)
@@ -61,7 +62,29 @@ def normalize(raw):
     return cev
 
 
+def _brevo_gonder(kime, konu, metin, ekler=(), bcc=None):
+    """HTTP ile gönderim (Brevo). Render'dan SMTP portları kapalı olduğunda kullanılır."""
+    import base64, requests
+    user = os.environ.get("SMTP_USER", os.environ.get("NIHAN_EMAIL", "nihan@thetakapisi.com.tr"))
+    veri = {"sender": {"name": "Nihan · Theta Kapısı", "email": user},
+            "to": [{"email": kime}], "subject": konu, "textContent": metin}
+    if bcc:
+        veri["bcc"] = [{"email": bcc}]
+    if ekler:
+        veri["attachment"] = []
+        for yol, ad in ekler:
+            with open(yol, "rb") as f:
+                veri["attachment"].append({"name": ad, "content": base64.b64encode(f.read()).decode()})
+    r = requests.post("https://api.brevo.com/v3/smtp/email",
+                      headers={"api-key": os.environ["BREVO_API_KEY"], "Content-Type": "application/json", "accept": "application/json"},
+                      json=veri, timeout=30)
+    if r.status_code >= 300:
+        raise RuntimeError("Brevo %s: %s" % (r.status_code, r.text[:300]))
+
+
 def mail_gonder(kime, konu, metin, ekler=(), bcc=None):
+    if os.environ.get("BREVO_API_KEY"):
+        return _brevo_gonder(kime, konu, metin, ekler, bcc)
     host = os.environ["SMTP_HOST"]; port = int(os.environ.get("SMTP_PORT", "465"))
     user = os.environ["SMTP_USER"]; pw = os.environ["SMTP_PASS"]
     msg = EmailMessage()
@@ -136,11 +159,14 @@ def sinir_haritasi():
     ad = str(raw.get("ad", "") or "").strip() or "Sen"
     eposta = str(raw.get("eposta", "") or "").strip()
     kod = str(raw.get("kod", "") or "").strip().upper()
-    gecerli = [k.strip().upper() for k in os.environ.get("URUN_KODU", "").split(",") if k.strip()]
+    gecerli = [k.strip().upper() for k in os.environ.get("URUN_KODU", "SINIR2026").split(",") if k.strip()]
     nihan = os.environ.get("NIHAN_EMAIL", "nihan@thetakapisi.com.tr")
 
     if not eposta:
         return jsonify({"ok": False, "hata": "eposta yok"}), 400
+    if not (os.environ.get("SMTP_PASS") or os.environ.get("BREVO_API_KEY")):
+        log.error("SMTP ayarları eksik; rapor üretilmedi (%s)", eposta)
+        return jsonify({"ok": False, "hata": "smtp"}), 500
     if gecerli and kod not in gecerli:
         mail_gonder(eposta, "Sınır Haritası: erişim kodu geçersiz",
                     "Merhaba %s,\n\nGirdiğin erişim kodu tanınmadı. Shopier'den gelen erişim kartındaki kodu kontrol edip formu yeniden doldurabilirsin. Sorun sürerse bu maile cevap yaz.\n\nNihan" % ad)
@@ -151,7 +177,7 @@ def sinir_haritasi():
     tmp = tempfile.mkdtemp()
     rapor_yolu = os.path.join(tmp, "sinir-haritasi-%s.pdf" % re.sub(r"[^a-z0-9]+", "-", ad.lower()))
     koc_yolu = os.path.join(tmp, "koc-notu.pdf")
-    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK", "https://wa.me/"))
+    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK", "https://wa.me/905324944632?text=S%C4%B1n%C4%B1r%20Haritas%C4%B1%20g%C3%B6r%C3%BC%C5%9Fmesi%20istiyorum"))
     koc_notu_pdf(ad, eposta, sonuc, koc_yolu)
 
     y = sonuc["alan_yuzde"]; t = sonuc["tip_yuzde"]
