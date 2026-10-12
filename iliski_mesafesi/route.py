@@ -109,7 +109,7 @@ def iliski_mesafesi():
         return jsonify({"ok": True, "durum": "destek"}), 200
 
     rapor_yolu = os.path.join(tmp, "iliski-mesafesi-%s.pdf" % re.sub(r"[^a-z0-9]+", "-", ad.lower()))
-    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK_MESAFE", "https://wa.me/905324944632?text=%C4%B0li%C5%9Fki%20Mesafesi%20g%C3%B6r%C3%BC%C5%9Fmesi%20istiyorum"))
+    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK_MESAFE", "https://wa.me/905324944692?text=%C4%B0li%C5%9Fki%20Mesafesi%20g%C3%B6r%C3%BC%C5%9Fmesi%20istiyorum"))
 
     if sonuc["incele"]:
         mail_gonder(eposta, "İlişki Mesafesi Haritası raporun hazırlanıyor",
