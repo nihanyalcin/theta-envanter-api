@@ -146,4 +146,5 @@ def puanla(cevaplar):
         "genis_durustce": genis_durustce,
         "soru_puan": soru_puan,
         "cumle": str(cevaplar.get("cumle", "") or "").strip(),
+        "cevaplar": {k: cevaplar.get(k) for k in cevaplar if k != "cumle"},
     }
