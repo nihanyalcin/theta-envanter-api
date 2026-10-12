@@ -163,14 +163,19 @@ def onizleme():
 def saglik():
     return jsonify({"durum": "çalışıyor"})
 
-# Sinir Haritasi envanteri (sinir_haritasi/route.py)
+# Sinir Haritasi envanteri (sinir_haritasi/sinir_haritasi/route.py)
 try:
-  from sinir_haritasi.sinir_haritasi import bp as sinir_bp
-  app.register_blueprint(sinir_bp)
-from iliski_mesafesi.route import bp as mesafe_bp
-app.register_blueprint(mesafe_bp)
+    from sinir_haritasi.sinir_haritasi import bp as sinir_bp
+    app.register_blueprint(sinir_bp)
 except Exception as _e:
-  print("sinir_haritasi yuklenemedi:", _e)
+    print("sinir_haritasi yuklenemedi:", _e)
+
+# Iliski Mesafesi envanteri (iliski_mesafesi/route.py)
+try:
+    from iliski_mesafesi.route import bp as mesafe_bp
+    app.register_blueprint(mesafe_bp)
+except Exception as _e:
+    print("iliski_mesafesi yuklenemedi:", _e)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
