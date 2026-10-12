@@ -166,3 +166,84 @@ SONRAKI = [
     ("Hayır Deme Cümleleri", "Raporda numarası geçen 60 hazır mesaj. Kopyala, gönder, telefonu bırak. thetakapisi.com.tr/hayir-deme-cumleleri"),
     ("İnanç Kazısı", "\"Hayır dersem sevilmem\" cümlesinin kökü için. thetakapisi.com.tr/dijital-urunler"),
 ]
+
+
+# ---------------------------------------------------------------------------
+# v2 eklemeleri: kişinin kendi cevapları, ikilemler, cümlesi
+# ---------------------------------------------------------------------------
+
+# Senaryo cevabında seçilen kapı için tek cümlelik yorum (alan sayfasında, alıntının altında)
+S_KAPI_YORUM = {
+    "S": ["Burada evet'i sen söylemedin, suçluluk söyledi: hayır dersen birinin üzüleceği düşüncesi karardan önce geldi.",
+          "Hayır'ın bedelini kendine ödettin: gitmedin değil, gidip sonra toparlandın. Suçluluk böyle tahsil eder.",
+          "Buradaki evet bir seçim değil, bir sigorta: 'kötü evlat / kötü arkadaş' olmamak için ödenen prim."],
+    "K": ["Burada hayır'ı yutan şey korku değil, gürültü: tartışma çıkmasın diye önce sustun, sonra kendine söylendin.",
+          "Bahane, hayır'ın kılık değiştirmiş hâli: gerçek sebebi söylemek çatışma gibi geldi, dolambaçlı yolu seçtin.",
+          "Sessiz kalmak çatışmayı önlemiyor, erteliyor; faturası içeride birikiyor."],
+    "G": ["Burada asıl istediğin hayır demek değil, görülmekti: evet dedin ama evet'in içinde fark edilme umudu vardı.",
+          "Kırgın ve sessiz gitmek bir mesaj, ama şifreli bir mesaj; karşı taraf çözemeyince kırgınlık büyüyor.",
+          "Fark edilmeyi beklemek, istemekten daha güvenli geliyor; ama bekleyen hep sen oluyorsun."],
+    "T": ["Burada kapı 'ben hallederim': devretmek güvensizlik gibi geldi, yük yine sende kaldı.",
+          "'Benden başkası yok' cümlesi çoğu zaman doğru değil, ama sen öyle davrandıkça doğru oluyor.",
+          "En iyi sen yapıyorsun, doğru; ama en iyi yapan, en çok yorulan da oluyor."],
+    "TUTAR": ["Burada sınırın tuttu. Bu cevabı hatırla; diğer alanlarda da aynı kasla hayır diyebilirsin.",
+              "Burada net ve kısa söyledin; sebep yığmadın. Tam da olması gereken bu.",
+              "Burada hayır dedin ve kimse ölmedi. Bu alanda kasın var; diğerlerine taşınabilir."],
+    "YOK": ["Bu durum senin için geçerli değil; puanlamaya girmedi."] * 3,
+}
+S_TUTAN_GIRIS = "Aynı anın tutan hâli:"
+
+# İkilemler sayfası
+Z_GIRIS = ("Sekiz ikilemde iki kötü arasından seçim yaptın; doğru cevap yoktu. Zorlandığında neyi feda ettiğin "
+           "burada görünüyor: puan değil, refleks.")
+Z_YORUM = {
+    "S": "İkilemlerde en çok suçluluk kapısını seçtin: zor anda ilk kaybetmeyi göze aldığın şey kendi rahatın, "
+         "ilk korumaya çalıştığın şey başkasının gönlü.",
+    "K": "İkilemlerde en çok çatışma kaçınmasını seçtin: zor anda sessizliği gürültüye tercih ediyorsun; bedelini "
+         "sonra, tek başına ödüyorsun.",
+    "G": "İkilemlerde en çok görünmezliği seçtin: zor anda söylemek yerine anlaşılmayı bekliyorsun; beklemek "
+         "söylemekten daha güvenli geliyor.",
+    "T": "İkilemlerde en çok tek başına taşımayı seçtin: zor anda devretmek güvensizlik gibi geliyor, yük sende "
+         "kalınca en azından kontrol sende.",
+}
+Z_DENGELI = "İkilemlerde tek bir kapıya yığılmadın; refleksin duruma göre değişiyor. Bu, kapıyı seçebildiğin anlamına gelir."
+Z_OZEL = {
+    ("z5", "a"): "İnsanlar seni \"hiç hayır demez\" diye biliyor. Bu bir iltifat değil, bir kullanım kılavuzu: sana istemenin bedeli yok.",
+    ("z5", "b"): "İnsanlar seni \"her şeyi halleder\" diye biliyor. Bu ünvanın bedeli, kimsenin sana \"iyi misin\" diye sormaması.",
+    ("z8", "a"): "Evet'i tartışmadan kaçmak için diyorsun. Yani evet'in bir cevap değil, bir çıkış kapısı.",
+    ("z8", "b"): "Evet'i fark edilmek için diyorsun. Yani evet'in bir cevap değil, bir el kaldırma.",
+    ("z7", "a"): "Devretmek sana güvensizlik gibi geliyor: başkası yapınca eksik kalacak hissi, yükü sende tutuyor.",
+    ("z7", "b"): "Reddetmek sana kabalık gibi geliyor: oysa kaba olan hayır değil, hayır'ın söylenme biçimidir.",
+}
+
+# Senin cümlen sayfası
+CUMLE_ALAN = {
+    "A": "Cümlende {kisi} var; bu, haritanın Aile alanına düşüyor.",
+    "I": "Cümlende {kisi} var; bu, haritanın İş alanına düşüyor.",
+    "R": "Cümlende {kisi} var; bu, haritanın Arkadaş ve çevre alanına düşüyor.",
+    "E": "Cümlende {kisi} var; bu, haritanın Eş ve partner alanına düşüyor.",
+    "N": "Cümlende {kisi} var; bu, haritanın Kendine alanına düşüyor.",
+}
+CUMLE_ALAN_UYUM = {
+    True: "Bu alan haritanda zaten en zayıf alanlardan biri; cümlen haritanı doğruluyor.",
+    False: "İlginç olan şu: bu alan haritanda görece güçlü. Demek ki sızıntı genel değil, bu kişiye ya da bu duruma özel.",
+}
+CUMLE_TIP = {
+    "S": "Cümlende \"{ipucu}\" geçiyor: hayır'ı yutan şey suçluluk. Birinin üzülme ihtimali, senin ihtiyacından önce geldi.",
+    "K": "Cümlende \"{ipucu}\" geçiyor: hayır'ı yutan şey çatışma korkusu. Gerginlik çıkmasın diye evet dedin.",
+    "G": "Cümlende \"{ipucu}\" geçiyor: hayır'ı yutan şey görülmeme. Söylemek yerine anlaşılmayı bekledin.",
+    "T": "Cümlende \"{ipucu}\" geçiyor: hayır'ı yutan şey \"ben hallederim\". Devretmek yerine üstlendin.",
+}
+CUMLE_TIP_UYUM = {
+    True: "Bu, haritandaki baskın kapınla aynı; cümlen kapını tarif ediyor.",
+    False: "Bu, haritandaki baskın kapından farklı; demek ki bu kişiyle başka bir kapıdan sızıyorsun. İki kapın var, ikisini de tanı.",
+}
+CUMLE_BELIRSIZ = ("Cümlende kime hayır diyemediğin ya da neden diyemediğin açıkça yazmıyor; bu da bir bilgi. "
+                  "Çoğu zaman en zor söylenen hayır, kime söylenemediği bile söylenemeyen hayırdır.")
+CUMLE_KARSI_GIRIS = "Aynı anda söyleyebileceğin cümle (Hayır Deme Cümleleri, mesaj {no}):"
+CUMLE_KAPANIS = ("Bu cümleyi bugün göndermek zorunda değilsin. Ama bir kere yüksek sesle oku. Ağzından çıkınca "
+                 "ne kadar sert, ne kadar yumuşak olduğunu duy; genellikle düşündüğünden daha nazik çıkar.")
+
+# Alan sayfasında hazır mesaj kutusu başlığı
+MESAJ_KUTU_UST = "HAZIR CÜMLE · MESAJ {no}"
+MESAJ_GERI_UST = "Geri bastırırsa:"
