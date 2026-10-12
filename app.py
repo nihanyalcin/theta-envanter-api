@@ -167,6 +167,8 @@ def saglik():
 try:
   from sinir_haritasi.sinir_haritasi import bp as sinir_bp
   app.register_blueprint(sinir_bp)
+from iliski_mesafesi.route import bp as mesafe_bp
+app.register_blueprint(mesafe_bp)
 except Exception as _e:
   print("sinir_haritasi yuklenemedi:", _e)
 
