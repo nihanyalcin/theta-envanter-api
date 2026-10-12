@@ -177,7 +177,7 @@ def sinir_haritasi():
     tmp = tempfile.mkdtemp()
     rapor_yolu = os.path.join(tmp, "sinir-haritasi-%s.pdf" % re.sub(r"[^a-z0-9]+", "-", ad.lower()))
     koc_yolu = os.path.join(tmp, "koc-notu.pdf")
-    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK", "https://wa.me/905324944632?text=S%C4%B1n%C4%B1r%20Haritas%C4%B1%20g%C3%B6r%C3%BC%C5%9Fmesi%20istiyorum"))
+    rapor_pdf(ad, sonuc, rapor_yolu, whatsapp_link=os.environ.get("WHATSAPP_LINK", "https://wa.me/905324944692?text=S%C4%B1n%C4%B1r%20Haritas%C4%B1%20g%C3%B6r%C3%BC%C5%9Fmesi%20istiyorum"))
     koc_notu_pdf(ad, eposta, sonuc, koc_yolu)
 
     y = sonuc["alan_yuzde"]; t = sonuc["tip_yuzde"]
