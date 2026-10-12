@@ -247,14 +247,14 @@ def rapor_pdf(ad, sonuc, yol, whatsapp_link="https://wa.me/", tarih=None):
     doc = BaseDocTemplate(yol, pagesize=(W, H), leftMargin=MARJ, rightMargin=MARJ, topMargin=30, bottomMargin=30,
                           title="Sınır Haritası · " + ad, author="Theta Kapısı")
     fr = Frame(MARJ, 30, W - 2 * MARJ, H - 60, id="f", leftPadding=0, rightPadding=0, topPadding=0, bottomPadding=0)
-    doc.addPageTemplates([PageTemplate(id="krem", frames=[fr], onPage=_bg_krem),
-                          PageTemplate(id="mor", frames=[fr], onPage=_bg_mor)])
+    doc.addPageTemplates([PageTemplate(id="mor", frames=[fr], onPage=_bg_mor),
+                          PageTemplate(id="krem", frames=[fr], onPage=_bg_krem)])
     F = []
     # 1 Kapak
-    F += [NextPageTemplate("mor"), Spacer(1, 190), Paragraph("THETA KAPISI", S["kapak_u"]), Spacer(1, 14),
+    F += [NextPageTemplate("krem"), Spacer(1, 190), Paragraph("THETA KAPISI", S["kapak_u"]), Spacer(1, 14),
           Paragraph("Sınır Haritası", S["kapak_h"]), Spacer(1, 16),
           Paragraph(esc(ad) + " için hazırlandı", S["kapak_p"]), Paragraph(tarih, S["kapak_p"]), Spacer(1, 290),
-          Paragraph("thetakapisi.com.tr", S["kapak_u"]), NextPageTemplate("krem"), PageBreak()]
+          Paragraph("thetakapisi.com.tr", S["kapak_u"]), PageBreak()]
     # 2 Tek bakışta
     F += [Paragraph("TEK BAKIŞTA", S["ust"]), Paragraph("Haritan", S["h1"])]
     for a in ["A", "I", "R", "E", "N"]:
