@@ -129,3 +129,159 @@ RISK_KELIMELER = [
     "bağır", "vur", "tehdit", "korku", "kork", "şiddet", "döv", "kıskanç",
     "yasak", "izin vermiyor", "intihar", "ölmek istiyorum", "ölmek isti",
 ]
+
+
+# Senaryo (S) şık metinleri — raporda kişinin kendi cevabını alıntılamak için
+S_SIK = {
+    "n6": {
+        "a": "Kabul ederim, ayıp olmasın",
+        "b": "\"Ziyaret yok, iyileşince\" derim",
+        "c": "Kabul ederim, zaten ben toparlarım",
+        "d": "Kabul ederim; herkes gidince ağlarım"
+    },
+    "n7": {
+        "a": "Birikmiş işleri yaparım",
+        "b": "Kendime ayırırım ve bunu söylerim",
+        "c": "Birisi plan yaparsa ona uyarım",
+        "d": "Dinlenirim ama suçluluk duyarım"
+    },
+    "n8": {
+        "a": "Kalkıp listeyi yazarım",
+        "b": "Nefes alır, listeyi sabaha bırakırım",
+        "c": "Kimi kırdım, kim kırıldı diye düşünürüm",
+        "d": "\"Herkes benden bekliyor\" diye içerlerim"
+    },
+    "i6": {
+        "a": "Gece yaparım",
+        "b": "\"Öğleden sonra olur; daha erken gerekiyorsa başka iş ertelensin\" derim",
+        "c": "\"Tamam\" derim, içimden isyan ederim",
+        "d": "Bir şey demem, sabah erken gelip bitiririm, kimse bilmez"
+    },
+    "i7": {
+        "a": "Yaparım, tartışmaya değmez",
+        "b": "\"Bu senin işin\" derim",
+        "c": "Yaparım, zaten ben daha iyi yaparım",
+        "d": "Yaparım ama yöneticinin fark etmesini umarım"
+    },
+    "i8": {
+        "a": "Yaparım, müşteri kaybetmek istemem",
+        "b": "Ek ücret söylerim",
+        "c": "Yaparım, \"bir dahaki sefere söylerim\" derim",
+        "d": "Yaparım, hakkımı yediğini düşünerek"
+    },
+    "a6": {
+        "a": "Giderim, sonra günlerce toparlanırım",
+        "b": "\"Gelemeyeceğim, haftaya\" derim",
+        "c": "Bahane uydururum, gerçek sebebi söylemem",
+        "d": "Giderim ama orada kırgın ve sessiz olurum"
+    },
+    "a7": {
+        "a": "Bakarım, benden başkası yok",
+        "b": "\"Bu ay olmuyor\" derim, neden açıklamam",
+        "c": "Bakarım ama içimden söylenirim, ona söylemem",
+        "d": "Bakarım; hayır dersem kötü teyze olurum"
+    },
+    "a8": {
+        "a": "Hazırlarım, zaten en iyi ben yaparım",
+        "b": "Konuyu açmam, sorulursa kabul ederim",
+        "c": "\"Bu bayram ev sahibi değilim\" derim",
+        "d": "Kabul ederim; reddedersem bayram zehir olur"
+    },
+    "r6": {
+        "a": "Uyanık kalıp cevap veririm",
+        "b": "\"Sabah konuşalım\" yazarım",
+        "c": "Okumam ama sabaha kadar düşünürüm",
+        "d": "Cevap veririm, sonra \"beni hiç düşünmüyor\" diye kırılırım"
+    },
+    "r7": {
+        "a": "Olurum, kimse istemiyor zaten",
+        "b": "\"Bu yıl ben değil\" derim",
+        "c": "Sessiz kalırım, seçerlerse itiraz etmem",
+        "d": "Olurum, reddetmek ayıp"
+    },
+    "r8": {
+        "a": "Veririm, arkadaşlık bozulmasın",
+        "b": "\"Önce eskisini kapatalım\" derim",
+        "c": "Veririm, konuyu hiç açmam",
+        "d": "Vermem ama sebebi söylemem, uzaklaşırım"
+    },
+    "e6": {
+        "a": "Giderim, bozmayayım",
+        "b": "\"Bu akşam yokum; bir dahakine önce sor\" derim",
+        "c": "Giderim ama bütün akşam soğuk dururum",
+        "d": "Giderim, söylemeye değmez"
+    },
+    "e7": {
+        "a": "Yaparım, zaten o yapamıyor",
+        "b": "\"Bu hafta sende\" derim",
+        "c": "Yaparım, içimden söylenirim",
+        "d": "Yaparım; konuşursak kavga olur"
+    },
+    "e8": {
+        "a": "Gösteririm, saklayacak bir şeyim yok",
+        "b": "\"Mahremiyetim var\" derim",
+        "c": "Gösteririm, tartışmak istemem",
+        "d": "Gösteririm, sonra kendime kızarım",
+        "e": "Böyle bir durum yok"
+    }
+}
+
+# İkilem (Z) soru ve şık metinleri
+Z_SORU = {
+    "z1": [
+        "Hangisi daha çok sen?",
+        {
+            "a": "Hayır dersem sevilmem",
+            "b": "Hayır dersem kavga çıkar"
+        }
+    ],
+    "z2": [
+        "Hangisi daha çok sen?",
+        {
+            "a": "Söylemesem de anlamalılar",
+            "b": "Söylesem de kimse benim kadar yapamaz"
+        }
+    ],
+    "z3": [
+        "Hangisi daha çok sen?",
+        {
+            "a": "Suçluluk beni yorar",
+            "b": "Görülmemek beni yorar"
+        }
+    ],
+    "z4": [
+        "Hangisi daha çok sen?",
+        {
+            "a": "Sessiz kalmayı seçerim",
+            "b": "Üstlenmeyi seçerim"
+        }
+    ],
+    "z5": [
+        "İnsanlar beni nasıl bilir?",
+        {
+            "a": "\"Hiç hayır demez\"",
+            "b": "\"Her şeyi halleder\""
+        }
+    ],
+    "z6": [
+        "Kırgınlığımı…",
+        {
+            "a": "içimde tutarım",
+            "b": "imalarla belli ederim"
+        }
+    ],
+    "z7": [
+        "Hangisi daha çok sen?",
+        {
+            "a": "Devretmek bana güvensizlik gibi gelir",
+            "b": "Reddetmek bana kabalık gibi gelir"
+        }
+    ],
+    "z8": [
+        "Evet dediğimde genelde…",
+        {
+            "a": "tartışmadan kaçmak için derim",
+            "b": "fark edilmek için derim"
+        }
+    ]
+}
