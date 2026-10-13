@@ -177,5 +177,12 @@ try:
 except Exception as _e:
     print("iliski_mesafesi yuklenemedi:", _e)
 
+# Erteleme Haritasi envanteri (erteleme/route.py)
+try:
+    from erteleme.route import bp as ertele_bp
+    app.register_blueprint(ertele_bp)
+except Exception as _e:
+    print("erteleme yuklenemedi:", _e)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
