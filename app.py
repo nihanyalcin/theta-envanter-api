@@ -184,5 +184,12 @@ try:
 except Exception as _e:
     print("erteleme yuklenemedi:", _e)
 
+# Onay Ihtiyaci Haritasi envanteri (onay/route.py)
+try:
+    from onay.route import bp as onay_bp
+    app.register_blueprint(onay_bp)
+except Exception as _e:
+    print("onay yuklenemedi:", _e)
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
